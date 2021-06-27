@@ -3,19 +3,23 @@ import numpy as np
 import sqlalchemy
 from binance import BinanceSocketManager
 from binance.client import Client
+from constants import api_key, secret_key
+import asyncio
 
-api_key = 'Buw50cp1iDCVR9ErLEgSsn2Y0Yk4ToVH1tbsZxQO2FLJOxdkgKwzTyui4tHx60vl'
-secret_key  = 'UkW9eYi3X47Q0Pi1ZER6OK80vBmzX7cIXtpCqBI4FSGrzQIwyuKC00aPemBHmQ3K'
 
-def basic_socket_manager():
+
+
+def basic_socket_manager(stock="BTCUSDT"):
     client = Client(api_key, secret_key)
-
-
     manager = BinanceSocketManager(client)
+    socket = manager.trade_socket(stock)
+    return socket
+
 
 
 
 
 if __name__=="__main__":
-    pass
+    skt = basic_socket_manager()
+    print(skt)
 
