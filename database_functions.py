@@ -25,6 +25,7 @@ def sql_query(connection, cursor, query_string= "SELECT * FROM crypto_data"):
 
 
 def add_df_stream_data(df, db_name='crypto.db', table_name='crypto_data'):
+    """adds data after formatting to sqlite database using sqlalchemy"""
     conn_string = f'sqlite:///{db_name}'
     engine = sqlalchemy.create_engine(conn_string)
     df.to_sql(table_name, engine, if_exists='append', index=False)
@@ -37,5 +38,6 @@ if __name__ == "__main__":
     cursor = create_cursor(conn)
     # create_table(conn, cursor)
     query = sql_query(conn, cursor)
+    print(query)
     conn.close()
 
