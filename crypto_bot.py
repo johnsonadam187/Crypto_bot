@@ -5,6 +5,7 @@ from binance.client import Client
 from constants import api_key, secret_key
 import asyncio
 from database_functions import add_df_stream_data
+from constants import coin_track_list
 
 
 async def basic_socket_manager(stock="BTCUSDT"):
@@ -17,6 +18,8 @@ async def basic_socket_manager(stock="BTCUSDT"):
     return msg
 
 
+
+
 def websocket_to_dataframe(socket_message):
     df1 = pd.DataFrame([socket_message])
     df1 = df1[['s', 'E', 'p']]
@@ -26,12 +29,17 @@ def websocket_to_dataframe(socket_message):
     return df1
 
 
+
 def main():
-    # TODO add scheduler to create loop for continual updating
-    skt = asyncio.run(basic_socket_manager())
-    df1 = websocket_to_dataframe(skt)
-    add_df_stream_data(df1, db_name='crypto.db', table_name='crypto_data')
-    print(df1)
+    """Use windows task scheduler to run script every hour which will automatically update database"""
+    for index, coin in enumerate(coin_track_list):
+        print(f"{coin}, {index + 1} of {len(coin_track_list)}")
+        try:
+            skt = asyncio.run(basic_socket_manager(coin))
+            df1 = websocket_to_dataframe(skt)
+            add_df_stream_data(df1, db_name='crypto.db', table_name='crypto_data')
+        except ValueError:
+            print(f"{coin} has incorrect listing")
 
 
 if __name__=="__main__":
