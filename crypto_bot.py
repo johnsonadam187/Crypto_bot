@@ -34,15 +34,16 @@ def main():
     """Use windows task scheduler to run script every hour which will automatically update database"""
     for index, coin in enumerate(coin_track_list):
         print(f"{coin}, {index + 1} of {len(coin_track_list)}")
-        try:
-            skt = asyncio.run(basic_socket_manager(coin))
-            df1 = websocket_to_dataframe(skt)
-            add_df_stream_data(df1, db_name='crypto.db', table_name='crypto_data')
-        except ValueError:
-            print(f"{coin} has incorrect listing")
+        skt = asyncio.run(basic_socket_manager(coin))
+        df1 = websocket_to_dataframe(skt)
+        add_df_stream_data(df1, db_name='crypto.db', table_name='crypto_data')
+        # except ValueError:
+        #     print(f"{coin} has incorrect listing")
+
 
 
 if __name__=="__main__":
+#    asyncio.run(main())
     main()
 
 # TODO create scheduler
